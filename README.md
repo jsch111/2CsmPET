@@ -10,5 +10,5 @@ Traces in which transitions (steps) are found are dispalyed to the user who can
 confirm the events, discard the trace and/or change default values for
 that trace.
 
-The script uses the code from the following link:
+The script uses code from the following link:
 https://github.com/thomasbkahn/step-detect/blob/master/step_detect.py 
