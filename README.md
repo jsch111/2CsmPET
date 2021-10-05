@@ -13,6 +13,6 @@ that trace.
 The script uses code from the following link:
 https://github.com/thomasbkahn/step-detect/blob/master/step_detect.py 
 
-The script runs on python 3.8 with the specified extensions, which can be installed with pip, for example.
+The script runs on a working version of python 3.8 with the specified extensions, which can be installed with pip, for example.
 During execution (for example per drag and drop) the user will be asked for text-files for the RED and GREEN channels. 
 For more information, see the 2CsmPET.py file.
