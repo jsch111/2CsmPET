@@ -20,3 +20,4 @@ files are in the .csv file format.
 For more detail information, see the 2CsmPET.py file.
 The python distribution Anaconda (Spyder application) can also be used to run the code. The script specifies the line of
 code that must be disabled when using Spyder.
+Code was executed on a Windows-installation.
