@@ -12,3 +12,5 @@ that trace.
 
 The script uses code from the following link:
 https://github.com/thomasbkahn/step-detect/blob/master/step_detect.py 
+
+The script runs on python 3.8 with the specified extensions.
