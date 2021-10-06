@@ -759,7 +759,7 @@ for (i, k) in zip(range(red_raw.shape[1]-1), range(green_raw.shape[1]-1)):
             steps_g = delete_event_green(steps_g, delete_green)
             peaks_pos_g, peaks_neg_g = step_sizes_own(mz_fwt_g, steps_g)
             
-            # bleaching-test; 1. checks bleaching-events
+            # bleaching-test; 1. searches for bleaching-events
             red_bleaching, green_bleaching = check_for_bleaching(data_o_r, data_o_g)
             times = peaks_pos + peaks_neg
             times.sort(key=abs)
