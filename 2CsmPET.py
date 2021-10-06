@@ -1,56 +1,57 @@
 """
-Script to analyze 2-color single-molecule PET intensity time traces.
+Script to analyse 2-colour single-molecule PET fluorescence intensity time traces.
 
 Usage
 ----------
-Script for analysis of two-color single-molecule data which shows digital intensity
-changes due to PET fluorescence fluctuations. The data are analyzed
-in terms of dwell-times and concomittance of transitions between both
-channels, thereby iterating over traces. A data-specific threshold is calculated
-and subsequently applied to find PET-mediated transitions and to ignore noise.
-Traces in which transitions (steps) are found are dispalyed to the user who can
-confirm the events, discard the trace and/or change default values for
+Script for analysis of two-color single-molecule fluorescence data which shows discrete intensity
+changes caused by PET fluorescence quenching. The data are analysed
+in terms of dwell-times and concomitance of transitions in both detection
+channels. A data-specific threshold is calculated
+and subsequently applied to find PET-mediated fluorescence transitions beyond noise.
+Traces in which transitions (steps) are found are displayed to the user who can
+confirm the events, discard the trace and/or cadjust default values, e.g. gaussian smoothing, in
 that trace.
 
 Notes
 ----------
 Data-specifc threshold:
-A default threshold of 0.01 is applied. Function iterates over traces and several
-normalization and resizing steps of the data and substraction of mean intensity is 
-followd by smoothing. The multiscale product is calculated using the step_detect.py
-module from Thomas Kahn. Further, the module is used to find steps above the initial
-threshold. Relative magnitudes ("peak-heights") of all steps are collected with 
-the step_detect module. The average value is calculated and serves subsequently as
+A default threshold of 0.01 is applied. The script iterates over traces and applies several
+normalisation and resizing steps. Substraction of mean intensity is 
+followed by smoothing. The multiscale product is calculated using the step_detect.py
+module from Thomas Kahn. Further, the module finds steps above the initial
+threshold. Relative magnitudes ("peak-heights") of all steps are collected using 
+the step_detect module. The average value is calculated, which serves subsequently as
 data-specific threshold.
 
-definition (bleaching):
-Frame counts as a belaching event if the signal remains eblow the average value
-from frame 5 to the current frame for longer than the number of frames specified
-by belaching_index. Set by default to 341, representing 340 frames.
+Definition (bleaching):
+A frame counts as a bleaching event if the signal remains below the average value
+of frame 5 to the current frame for longer than the number of frames specified
+by the bleaching_index. bleaching_index is set by default to 341, representing 340 frames.
+By that, most bleaching events are found.
 
-concomittance:
-A transition is identified as simultaneous if the events occurs in both channels
-within the indicated time window (default: 6 frames).
+Concomitance:
+Two transitions are identified as simultaneous if they occur in both channels
+within the specified time window (default: 6 frames).
 
-calculation of events:
-Traces (events) are filtered to exhibit any intensity fluctuations in both channels
-to filter for functional molecules. Further, only alternating transitions are
-considered as these originate from PET. Events are sorted in simultaneous and
-not simultaneous ones by considering the concomittance time-window.
+Calculation of events:
+The script triages and selects traces that exhibit intensity fluctuations in both detection channels,
+suggesting the presence of functional molecules. Further, only alternating transitions are
+considered because they could otherwise originate from photo-bleaching. Events are sorted in simultaneous and
+not simultaneous ones by considering the concomitance time-window.
 
-delete events option:
-During analysis events can be manually selected to be not considered. Reasons for this
-are: transition with low step magnitude (being not caused by PET) incorrectly identified 
-as step due to insufficient thresholding; Steps that occur after a bleaching event,
-that was not detected properly; Incorrectly detected ON-OFF alternation (instead of
-OFF-OFF or ON-ON) due to non-detection of a step beforehand.
+Delete events option:
+During analysis, there is an option to manually select events to be not excluded. Reasons for this
+are: erroneously identified transitions with low step-size magnitudes as step due to 
+insufficient thresholding; steps that occur after events of photo-bleaching missed
+in the analysis; erroneous detection of "pseudo" ON-OFF alternation due to missed detection
+of a same-type step beforehand (double-off or double-on).
 
-supported Files:
-text Files, with spacebar as delimiter
+Supported files:
+Text files (space bars as delimiter)
 
-output-File:
-CSV-File, including ON and OFF dwell times for each channel as well as the absolute
-number of transitions/steps that occured simultaneous and not simultaneous.
+Output file:
+CSV-file, including ON and OFF dwell times for each channel as well as the absolute
+numbers of transitions/steps that occured simultaneous and non-simultaneous.
 
 
 References
@@ -120,8 +121,8 @@ def default_thresholds():
     
 def change_thresholds(sigma_r, sigma_g, threshold_r, threshold_g, n, delete_red, delete_green):
     """	Function to change thresholds used in default_thresholds() while script is running.
-    In addition the option to not consider events manually is provided. For more details
-	refer to "Notes".
+    In addition the option to exclude events manually is provided. For more details
+	see "Notes".
     
     Parameters are loaded from default_thresholds().
     
@@ -174,8 +175,8 @@ def change_thresholds(sigma_r, sigma_g, threshold_r, threshold_g, n, delete_red,
 
 
 def delete_event_red(steps, delete_red):
-    """	Performs ignoration of incorrectly detected events if the option 
-    in change_thresholds() is selected and events were typed in for red channel.
+    """	Ignores incorrectly detected events if this option is selected
+    in change_thresholds() and events were specified for red channel.
     
     Parameters:
     -----------
@@ -185,7 +186,7 @@ def delete_event_red(steps, delete_red):
     Returns:
     --------
     steps = list
-            Updated List of indices.
+            Updated list of indices.
     """
     if not type(delete_red) == str:
         delete_red.reverse()
@@ -197,8 +198,8 @@ def delete_event_red(steps, delete_red):
 
 def delete_event_green(steps, delete_green):
     """	
-    Performs ignoration of incorrectly detected events if the option 
-    in change_thresholds() is selected and events were typed in for green channel.
+    Ignores incorrectly detected events if this option is selected
+    in change_thresholds() and events were specified for green channel.
     
     Parameters:
     -----------
@@ -208,7 +209,7 @@ def delete_event_green(steps, delete_green):
     Returns:
     --------
     steps = list
-            Updated List of indices.
+            Updated list of indices.
     """
     if not type(delete_green) == str:
         delete_green.reverse()
@@ -221,7 +222,7 @@ def delete_event_green(steps, delete_green):
 def step_sizes_own(data, indices):
     """ Determines the directionality of each step (index) by looking up
     the values of the input data (mz_fwt from step_detect.py) and sorting them
-    into negative (<0) and positive (>0).
+    as negative (<0) and positive (>0).
     
     Parameter:
     ----------
@@ -297,10 +298,10 @@ def check_for_bleaching(red, green, bleaching_index=341):
     Parameters:
     -----------
     red/green = numpy array
-                1-dimensional array that represents time series of datapoints
+                1-dimensional array that represents time series of data points
     bleaching_index = int
                       Number of frames, for which the signal has to remain below the average 
-					  value from frame 5 to the current one, to be detectes as bleaching event.
+					  value from frame 5 to the current one, to be detected as bleaching event.
     
     Returns:
     --------
@@ -339,8 +340,8 @@ def check_for_bleaching(red, green, bleaching_index=341):
 
 
 def consider_bleaching(bleaching_event_red, bleaching_event_green, times_copy, times_g_copy):
-    """ Considers present bleaching events. If bleaching events were found by check_for_bleaching()
-    following events are not considered. Returns updated lists of steps.
+    """ Considers bleaching events present. If bleaching events were found by check_for_bleaching(),
+    the subsequent events are not considered. Returns updated lists of steps.
 	
 	Parameters:
 	-----------
@@ -352,7 +353,7 @@ def consider_bleaching(bleaching_event_red, bleaching_event_green, times_copy, t
 	Returns:
 	--------
 	times, times_g = list
-	                 Updated version of lists of indiced of steps
+	                 Updated version of lists of indices of steps
     """
     times
     times_g
@@ -389,19 +390,19 @@ def consider_bleaching(bleaching_event_red, bleaching_event_green, times_copy, t
 
 
 def simultancy(red, green, window):
-    """ Checks for concomitance of steps/events in red and green channel and divide
-    them in simultaneous and not simultaneous ones. Events are sorted for absolute value
-    and gets compared iteratively against each other to detect steps that occur 
-    simultaneous within the selected time window.
+    """ Checks for concomitance of steps/events in red and green channel and separates
+    them in simultaneous and non-simultaneous ones. Events are sorted for absolute values
+    and compared iteratively against each other to detect steps that occur 
+    simultaneously within the selected time window.
     
     Parameters:
     -----------
     red/green = list
                 List of indices of steps.
     window = int
-             Number of frames that is used as time window to divide events
-             into simultaneous and not simultaneous ones. Starting from 
-             red event, code is searching for event in green channel that occurs within 
+             Number of frames used as time window to separate events
+             into simultaneous and non-simultaneous ones. Starting from 
+             red event, the code is searching for event in green channel that occurs within 
              time window before or after the frame/time point of interest and vice versa.
              E.g. window = 5, Event in red channel at frame = 51. Window for green 
              (and red) event to be assigned as simultaneous = frame 47-55.
@@ -411,7 +412,7 @@ def simultancy(red, green, window):
     simul_r/simul_g = list
                       Lists contain events/steps that occur simultaneous in the particular channel.
     non_simul_r/non_simul_g = list
-                              Lists contain events/steps that occur not simultaneous in the particular channel.
+                              Lists contain events/steps that occur non-simultaneous in the particular channel.
     """
     window = window-1       # actual window size equal to 'window'
     red_events = red
@@ -465,14 +466,14 @@ def simultancy(red, green, window):
 
 def calculate_events(red, green):
     """ Calculates step-durations (dwell times) for both channels using indices of detected steps. 
-    Filter is implemented that allows only events that occur alternatingly (ON-OFF or OFF-ON). 
-    In order to analyze only functional molecules only traces (their steps in particular) 
-    are allowed that show minimum one ON- and OFF-dwell time per channel. Otherwise trace is skipped. 
+    Filter is implemented that selects alternating events (ON-OFF or OFF-ON). 
+    In order to analyse only functional molecules, only traces (including steps) 
+    are allowed that show a minimum one ON- and OFF-dwell time per channel. Otherwise trace is skipped. 
 	
 	Parameters:
 	-----------
 	red, green = list
-	             Lists of indices of detected steps of the respective channel after considered bleaching events
+	             Lists of indices of detected steps in the respective channel after considered bleaching events
 	
 	Returns:
 	--------
@@ -522,7 +523,7 @@ def calculate_events(red, green):
         elif times_g[j2+1] < 0:
             results_on2.append(result2)
     
-    # results are only considered if minimum 1 ON- and OFF-dwell time per channel present
+    # results are only considered if a minimum one ON- and OFF-dwell time per channel is present
     if results_on1 and results_off1 and results_on2 and results_off2:
         #red
         on_peaks_red = [i for i in times if i>0]
@@ -546,14 +547,14 @@ def calculate_events(red, green):
 
  
 def plot_data(data_o_r, data_o_g, peaks_red, peaks_green, data_smoothed_r, data_smoothed_g, sigma, orig_data_red, orig_data_green):
-    """ Function to plot different data analyzing steps in order to confirm results manually while script is running.
+    """ Function to plot data analyzing steps in order to confirm results manually while script is running.
     4 horizontally ordered panels. Found steps are superimposed as dotted vertical lines in each panel. In panel
-    1 and 2 red and green colored bars indicate ON states (light colors) and OFF states (dark colors).
+    1 and 2 red and green coloured bars indicate ON states (light colours) and OFF states (dark colours).
         Panel 1: raw intensity time traces of red and green channel are plotted
         Panel 2: data after substraction of average intensities and normalization to 1
         Panel 3: data smoothed with gaussian_filter1d
         Panel 4: multiscale product of mz discrete forward wavelet transform, calculated with mz_fwt from step_detect.py.
-                 Calculated thresholds for red and green data are indicated as horizontal colored lines.
+                 Calculated thresholds for red and green data are indicated as horizontal coloured lines.
 
     Parameters:
     -----------
@@ -668,18 +669,18 @@ def plot_data(data_o_r, data_o_g, peaks_red, peaks_green, data_smoothed_r, data_
 
 
 	
-""" Script asks for two .txt files that represent RED and GREEN time series and files are loaded
-using numpy. Files get reduced to every second column (contain maximum grey values).
-After that different functions defined above are used to analyze the red and green data
-sets. Therefor script iterates over traces in red and green channel simultaneous.
-Also steps that are detailly described in the calculated_threshold function are
-applied to the data thereby using the calculated threshold.
-Traces in which steps were found are shown to the user with the plot_data function
-that allows user to change initial values for the particular trace (see default_thresholds)
-and confirmation of the found steps/dwell times.
+""" Script asks for two .txt files that contain RED and GREEN time series. Files are loaded
+using numpy. Files are reduced to contain every second column (contain maximum grey values).
+Different functions, defined above, are used to analyse the red and green data
+sets. The script iterates over traces in red and green channel.
+Steps that are detailed in the calculated_threshold function are
+applied to the data using the calculated threshold.
+Traces in which steps were found are displayed to the user using the plot_data function
+that allows users to change initial values for the particular trace (see default_thresholds)
+and to confirm the found steps/dwell times.
 """
 
-File_red = filedialog.askopenfilename(initialdir = "D:/Promotion/1_single-molecule PET fluorescence imaging microscopy/2-Farben-Messungen",
+File_red = filedialog.askopenfilename(initialdir = "C:/",
                                       title = "Select input file for RED dye ", filetypes = (("text files", "*.txt"), ("all files", "*.*")))
 FileName = os.path.splitext(os.path.basename(File_red))[0]
 DirName = os.path.dirname(File_red)
@@ -758,7 +759,7 @@ for (i, k) in zip(range(red_raw.shape[1]-1), range(green_raw.shape[1]-1)):
             steps_g = delete_event_green(steps_g, delete_green)
             peaks_pos_g, peaks_neg_g = step_sizes_own(mz_fwt_g, steps_g)
             
-            # bleaching-test; 1. checks for bleaching-events
+            # bleaching-test; 1. checks bleaching-events
             red_bleaching, green_bleaching = check_for_bleaching(data_o_r, data_o_g)
             times = peaks_pos + peaks_neg
             times.sort(key=abs)
@@ -767,7 +768,7 @@ for (i, k) in zip(range(red_raw.shape[1]-1), range(green_raw.shape[1]-1)):
             times_copy = deepcopy(times)
             times_g_copy = deepcopy(times_g)
             
-            # bleaching-test; 2. if bleaching event is present, events happening afterwards gets deleted
+            # bleaching-test; 2. if a bleaching event is detected, events occuring afterwards are discarded
             times, times_g = consider_bleaching(red_bleaching, green_bleaching, times_copy, times_g_copy)
 
             on_peaks_red, off_peaks_red, results_on1, results_off1, on_peaks_green, off_peaks_green, results_on2, results_off2, peaks, peaks_g, times, times_g = calculate_events(times, times_g)
@@ -857,5 +858,4 @@ with open(outputpath, "w") as csvfile:
 
 print("End of File")
 input()
-    
 
