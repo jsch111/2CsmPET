@@ -9,7 +9,7 @@ in terms of dwell-times and concomitance of transitions in both detection
 channels. A data-specific threshold is calculated
 and subsequently applied to find PET-mediated fluorescence transitions beyond noise.
 Traces in which transitions (steps) are found are displayed to the user who can
-confirm the events, discard the trace and/or cadjust default values, e.g. gaussian smoothing, in
+confirm the events, discard the trace and/or adjust default values, e.g. gaussian smoothing, in
 that trace.
 
 Notes
