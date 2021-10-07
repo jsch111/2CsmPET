@@ -27,7 +27,7 @@ Definition (bleaching):
 A frame counts as a bleaching event if the signal remains below the average value
 of frame 5 to the current frame for longer than the number of frames specified
 by the bleaching_index. bleaching_index is set by default to 341, representing 340 frames.
-By that, most bleaching events are found.
+In this way, most bleaching events are found.
 
 Concomitance:
 Two transitions are identified as simultaneous if they occur in both channels
@@ -43,8 +43,8 @@ Delete events option:
 During analysis, there is an option to manually select events to be not excluded. Reasons for this
 are: erroneously identified transitions with low step-size magnitudes as step due to 
 insufficient thresholding; steps that occur after events of photo-bleaching missed
-in the analysis; erroneous detection of "pseudo" ON-OFF alternation due to missed detection
-of a same-type step beforehand (double-off or double-on).
+in the analysis; erroneous detection of artificial ON-OFF alternations that contain two
+consecutive off or on transitions.
 
 Supported files:
 Text files (space bars as delimiter)
